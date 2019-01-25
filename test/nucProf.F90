@@ -31,6 +31,10 @@ program nucProf
 
     integer                                :: j
 
+#ifdef DEBUG
+        print *, 'Debug mode enabled'
+#endif
+
     do j = 1, 1000
         ! Reset Thermochimica:
         call ResetThermoAll
