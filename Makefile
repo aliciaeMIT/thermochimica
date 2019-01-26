@@ -23,8 +23,8 @@
 
 AR          = ar
 FC          = gfortran
-#DEBUG       = -D"DEBUG"
-FCFLAGS     = -Wall -g -pg -O0 -fno-automatic -fbounds-check -ffpe-trap=zero -D"DATA_DIRECTORY='$(DATA_DIR)'" $(DEBUG)
+#DEBUGM       = -D"DEBUGM"
+FCFLAGS     = -Wall -g -pg -O0 -fno-automatic -fbounds-check -ffpe-trap=zero -D"DATA_DIRECTORY='$(DATA_DIR)'" $(DEBUGM)
 #FCFLAGS     = -Wall -g -fbounds-check
 #FCFLAGS     = -Wall -g -O0 -fno-automatic -fbounds-check
 #LDFLAGS     = -framework Accelerate -g -fbounds-check
@@ -73,8 +73,9 @@ MODS_LNK    = $(addprefix $(OBJ_DIR)/,$(MODS_SRC))
 ## =================
 
 TC_LIB      = libthermochimica.a
-SHARED_SRC  = $(foreach dir,$(SHARED_DIR),$(notdir $(wildcard $(dir)/*.f90)))
-SHARED_OBJ  = $(SHARED_SRC:.f90=.o)
+SHARED_SRC  = $(foreach dir,$(SHARED_DIR),$(notdir $(wildcard $(dir)/*.f90))) $(foreach dir,$(SHARED_DIR),$(notdir $(wildcard $(dir)/*.F90)))
+SHARED_OB1  = $(SHARED_SRC:.f90=.o)
+SHARED_OBJ  = $(SHARED_OB1:.F90=.o)
 SHARED_LNK  = $(addprefix $(OBJ_DIR)/,$(SHARED_OBJ))
 SHARED_LIB  = $(OBJ_DIR)/$(TC_LIB)
 
@@ -140,7 +141,13 @@ ${BIN_DIR}:
 %.o: %.f90
 	$(FC) $(FCFLAGS) -c $< -o $@
 
+%.o: %.F90
+	$(FC) $(FCFLAGS) -c $< -o $@
+
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.f90
+	$(FC) -I$(OBJ_DIR) -J$(OBJ_DIR) $(FCFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.F90
 	$(FC) -I$(OBJ_DIR) -J$(OBJ_DIR) $(FCFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/%.o: $(TST_DIR)/%.f90
