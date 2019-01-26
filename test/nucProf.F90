@@ -31,7 +31,7 @@ program nucProf
 
     integer                                :: j
 
-#ifdef DEBUG
+#ifdef DEBUGM
         print *, 'Debug mode enabled'
 #endif
 
